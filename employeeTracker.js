@@ -59,14 +59,13 @@ function start() {
       case "Update Employee Role":
         updateRole();
         break;
-
     }
   });
 }
 
-// Functions to perform task depending on user selection from original prompt
+// Functions to perform tasks depending on user selection from above inquirer prompt
 function viewEmployees() {
-  var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON role.department_id = department.id ORDER BY employee.last_name ASC";
+  var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON role.department_id = department.id ORDER BY employee.id ASC";
   connection.query(query, function (err, res) {
     if (err) throw err;
     console.table('\n', res);
