@@ -103,13 +103,23 @@ function addEmployee() {
       type: "input",
       name: "last_name",
       message: "Please enter employee's last name:"
+    },
+    {
+      type: "input",
+      name: "role",
+      message: "Please enter role:"
     }
-  ]).then(function ({ first_name, last_name }) {
-    connection.query("INSERT INTO employee (first_name, last_name) VALUES ?", (["first_name", "last_name"]), function (err, res) {
-      if (err) throw err;
-      console.log("Employee Added!");
-      console.table(res);
-    });
+  ]).then(function (answer) {
+    var query = "INSERT INTO employee SET ?";
+    connection.query(query,
+      {
+        first_name: answer.first_name,
+        last_name: answer.last_name,
+        role_id: answer.role
+      }, function (err, res) {
+        if (err) throw err;
+        console.table('\n', res);
+      });
     start();
   })
 }
@@ -119,22 +129,35 @@ function addDepartment() {
     type: "input",
     name: "department",
     message: "Please enter the department you would like to add:"
-  }).then(function(answer) {
+  }).then(function (answer) {
     connection.query("INSERT INTO department SET ?",
-    {
-      name: answer.department
-    },
-    function(err){
-      if (err) throw err;
-      console.log("The department was added successfully!");
-      start();
-    });
-    
+      {
+        name: answer.department
+      },
+      function (err) {
+        if (err) throw err;
+        console.log("The department was added successfully!");
+        start();
+      });
   })
 }
 
 function addRole() {
-
+  inquirer.prompt({
+    type: "input",
+    name: "role",
+    message: "Please enter the role you would like to add:"
+  }).then(function (answer) {
+    connection.query("INSERT INTO role SET ?",
+      {
+        title: answer.role
+      },
+      function (err) {
+        if (err) throw err;
+        console.log("The role was added successfully!");
+        start();
+      });
+  })
 }
 
 function updateRole() {
@@ -149,7 +172,7 @@ function updateRole() {
       name: "last_name",
       message: "Please enter last name of employee whose role you wish to update:"
     }
-  ]).then(function({ first_name, last_name }) {
+  ]).then(function ({ first_name, last_name }) {
     var query = "UPDATE employee SET role_id"
     connection.query()
   })
