@@ -62,14 +62,17 @@ function start() {
 
     }
   });
+
+  console.log("\n------------------------")
 }
 // Various functions to perform task depending on user selection from original prompt
 function viewEmployees() { 
-  var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON role.department_id = department.id ORDER BY employee.first_name DESC"; 
+  var query = "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON role.department_id = department.id ORDER BY department.name DESC"; 
   connection.query(query, function(err, res) {
-    if(err) throw err;
-    console.table(res);
+    if (err) throw err;
+    console.table('\n',res);
   })
+  start();
 }
 
 function viewDepartment() {
@@ -78,6 +81,7 @@ function viewDepartment() {
     if (err) throw err;
     console.table(res);
   })
+  start();
 };
 
 function viewRole(){
@@ -86,33 +90,28 @@ function viewRole(){
     if (err) throw err;
     console.table(res);
   })
-}
+  start();
+};
 
 function addEmployee() {
   inquirer.prompt([
     {
       type: "input",
-      name: "firstName",
+      name: "first_name",
       message: "Please enter employee's first name:"
     },
     {
       type: "input",
-      name: "lastName",
+      name: "last_name",
       message: "Please enter employee's last name:"
     }
-  ]).then(function (answer) {
-    var query = "INSERT INTO employee SET ?";
-    connection.query(query,
-      {
-        first_name: answer.firstName,
-        last_name: answer.lastName,
-        role_id: "",
-        manager_id: null
-      },
-      function(err, res) {
-        if (err) throw err;
-        console.table(res);
-      });
+  ]).then(function ({ first_name, last_name }) {
+    connection.query("INSERT INTO employee (first_name, last_name) VALUES ?", (["first_name", "last_name"]), function(err, res){
+      if (err) throw err;
+      console.log("Employee Added!");
+      console.log(res);
+      console.table(res);
+    });
       start();
   })
 }
